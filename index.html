@@ -41,7 +41,7 @@
           </svg>
         </a>
 
-        <a class="header__link" href="/card">
+        <a class="header__link" href="/cart">
           <span class="header__link-text">Корзина</span>
           <span class="header__count">(5)</span>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -129,7 +129,7 @@
             <span class="breadcrumb__separator">&gt;</span>
           </li>
           <li class="breadcrumb__item">
-            <a class="breadcrumb__link" href="/category?/slug=Кресла">Кресла</a>
+            <a class="breadcrumb__link" href="/category?slug=Кресла">Кресла</a>
             <span class="breadcrumb__separator">&gt;</span>
           </li>
           <li class="breadcrumb__item">
@@ -146,12 +146,12 @@
         <ul class="goods__list">
           <li class="goods__item">
             <article class="goods__card card">
-              <a href="/product" class="card__link card__link_img">
+              <a href="/product/123" class="card__link card__link_img">
                 <img src="/img/chair_product.jpg" alt="Кресло с подлокотниками" class="card__img">
               </a>
               <div class="card__info">
                 <h3 class="card__title">
-                  <a href="/product" class="card__link">
+                  <a href="/product/123" class="card__link">
                     Кресло с подлокотниками
                   </a>
                 </h3>
@@ -169,12 +169,12 @@
           </li>
           <li class="goods__item">
             <article class="goods__card card">
-              <a href="/product" class="card__link card__link_img">
+              <a href="/product/456" class="card__link card__link_img">
                 <img src="/img/chair_product.jpg" alt="Кресло с подлокотниками" class="card__img">
               </a>
               <div class="card__info">
                 <h3 class="card__title">
-                  <a href="/product" class="card__link">
+                  <a href="/product/456" class="card__link">
                     Кресло с подлокотниками
                   </a>
                 </h3>
@@ -192,12 +192,12 @@
           </li>
           <li class="goods__item">
             <article class="goods__card card">
-              <a href="/product" class="card__link card__link_img">
+              <a href="/product/789" class="card__link card__link_img">
                 <img src="/img/chair_product.jpg" alt="Кресло с подлокотниками" class="card__img">
               </a>
               <div class="card__info">
                 <h3 class="card__title">
-                  <a href="/product" class="card__link">
+                  <a href="/product/789" class="card__link">
                     Кресло с подлокотниками
                   </a>
                 </h3>
@@ -263,12 +263,12 @@
           </li>
           <li class="goods__item">
             <article class="goods__card card">
-              <a href="/product" class="card__link card__link_img">
+              <a href="/product/369" class="card__link card__link_img">
                 <img src="/img/chair_product.jpg" alt="Кресло с подлокотниками" class="card__img">
               </a>
               <div class="card__info">
                 <h3 class="card__title">
-                  <a href="/product" class="card__link">
+                  <a href="/product/369" class="card__link">
                     Кресло с подлокотниками
                   </a>
                 </h3>
@@ -537,7 +537,9 @@
           <h2 class="order__title-text">Заказ успешно размещен</h2>
           <p class="order__title-price">20&nbsp;000&nbsp;₽</p>
         </div>
-        <p class="order__title-number">№43435</p>
+        <a class="order__link" href="/order">
+          <p class="order__title-number">№43435</p>
+        </a>
         <div class="order__characters">
           <h3 class="order__characteristics-title">Данные доставки</h3>
           <table class="order__characteristics-table order-table">
@@ -622,11 +624,11 @@
       <ul class="footer__developer-list">
         <li class="footer__developer-item">
           Designer:
-          <a class="footer__developer-link" href="http://t.me/Mrshmallowww">Anastssia Ilina</a>
+          <a class="footer__developer-link" target="_blank" href="http://t.me/Mrshmallowww">Anastssia Ilina</a>
         </li>
         <li class="footer__developer-item">
           Developer:
-          <a class="footer__developer-link" href="http://t.me/Vera_07_08">Vera Deeva</a>
+          <a class="footer__developer-link" target="_blank" href="http://t.me/Vera_07_08">Vera Deeva</a>
         </li>
       </ul>
       <p class="footer__copyright">© Koff, 2023</p>
