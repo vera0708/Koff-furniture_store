@@ -8,38 +8,28 @@
     }
 
     &__title {
-        display: grid;
-        grid-template-areas:
-            'title'
-            'price'
-            'art';
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
         margin-bottom: 20px;
 
         @media (min-width: 580px) {
-            grid-template-areas:
-                'title price'
-                'art .';
+            flex-direction: row;
             margin-bottom: 12px;
         }
     }
-
 
     &__title-text {
         grid-area: title;
         font-size: 16px;
-        margin-bottom: 8px;
 
         @media (min-width: 580px) {
             font-size: 20px;
-            margin-bottom: 12px;
         }
     }
 
-
     &__title-price {
-        grid-area: price;
         font-size: 16px;
-        margin-bottom: 12px;
 
         @media (min-width: 580px) {
             font-size: 20px;
@@ -47,10 +37,11 @@
     }
 
     &__title-number {
-        grid-area: art;
+        display: inline-block;
         border-radius: 32px;
         padding: 4px 8px;
         background-color: #eeeff2;
+        margin-bottom: 24px;
     }
 
     &__characters {
@@ -62,7 +53,6 @@
         font-weight: 400;
         margin-bottom: 12px;
     }
-
 
     &__caracters-table {
         margin-bottom: 24px;

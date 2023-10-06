@@ -17,6 +17,7 @@
 		width: 100%;
 		object-fit: cover;
 		border-radius: 16px;
+		aspect-ratio: 151/125;
 	}
 
 	&__info {
@@ -51,7 +52,7 @@
 	}
 
 	&__btn {
-		// width: 100%;
+		width: 100%;
 		padding: 12px 24px;
 		color: #780096;
 		border-radius: 32px;
