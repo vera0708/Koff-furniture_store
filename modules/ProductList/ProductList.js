@@ -47,8 +47,6 @@ export class ProductList {
     const listItems = data.map((item) => {
       const listItemElem = document.createElement('li');
       listItemElem.innerHTML = this.getHTMLTemplateItem(item);
-
-
       return listItemElem;
     });
 

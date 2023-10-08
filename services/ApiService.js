@@ -54,5 +54,13 @@ export class ApiService {
             category,
             q,
         });
-    }
+    };
+
+    async getProductCategories() {
+        return await this.getData('api/productCategories');
+    };
+
+    async getProductById(id) {
+        return await this.getData(`api/products/${id}`);
+    };
 }

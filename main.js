@@ -7,6 +7,7 @@ import { Main } from './modules/Main/Main';
 import { Order } from './modules/Order/Order';
 import { ProductList } from './modules/ProductList/ProductList';
 import { ApiService } from './services/ApiService';
+import { Catalog } from './modules/Catalog/Catalog';
 
 const productSlider = () => {
     Promise.all([
@@ -37,49 +38,53 @@ const productSlider = () => {
 
 const init = () => {
     const api = new ApiService();
+    const router = new Navigo("/", { linksSelector: 'a[href^="/"]' });
 
     new Header().mount();
     new Main().mount();
     new Footer().mount();
-    // const header = new Header();
-    // console.log('new Header(): ', header);
-    /*const headerElement = new Header().element;
-    headerElement.innerHTML = '123';
-    console.log(new Header().element.innerHTML);*/
+
+    api.getProductCategories().then(data => {
+        new Catalog().mount(new Main().element, data);
+        router.updatePageLinks();
+    });
 
     productSlider();
-
-    const router = new Navigo("/", { linksSelector: 'a[href^="/"]' });
 
     router
         .on("/",
             async () => {
                 const product = await api.getProducts();
                 new ProductList().mount(new Main().element, product);
+                router.updatePageLinks();
             }, {
             leave(done) {
-                console.log('leave')
+                new ProductList().unmount();
                 done()
             },
             already() {
                 console.log('already')
             },
         })
-        .on("/category", (obj) => {
-            console.log('category', obj);
-            new ProductList().mount(new Main().element, [5, 6, 1, 2, 3, 7, 8], 'Category');
-        }, {
+        .on("/category",
+            async ({ params: { slug } }) => {
+                const product = await api.getProducts();
+                new ProductList().mount(new Main().element, product, slug);
+                router.updatePageLinks();
+            }, {
             leave(done) {
-                console.log('leave category')
+                new ProductList().unmount();
                 done()
             },
         })
-        .on("/favorite", () => {
-            console.log('favorite');
-            new ProductList().mount(new Main().element, [7, 8, 5, 6, 1], 'favorite');
-        }, {
+        .on("/favorite",
+            async () => {
+                const product = await api.getProducts();
+                new ProductList().mount(new Main().element, product, 'favorite');
+                router.updatePageLinks();
+            }, {
             leave(done) {
-                console.log('leave category')
+                new ProductList().unmount();
                 done()
             },
         })
