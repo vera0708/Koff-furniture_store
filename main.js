@@ -5,6 +5,7 @@ import { Header } from './modules/Header/Header';
 import { Footer } from './modules/Footer/Footer';
 import { Main } from './modules/Main/Main';
 import { Order } from './modules/Order/Order';
+import { ProductList } from './modules/ProductList/ProductList';
 
 const productSlider = () => {
     Promise.all([
@@ -50,7 +51,16 @@ const init = () => {
 
     router
         .on("/", () => {
-            console.log('на главной')
+            console.log('на главной');
+            new ProductList().mount(new Main().element, [1, 2, 3]);
+        }, {
+            leave(done) {
+                console.log('leave')
+                done()
+            },
+            already() {
+                console.log('already')
+            },
         })
         .on("/category", (obj) => {
             console.log('category', obj);

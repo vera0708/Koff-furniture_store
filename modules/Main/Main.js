@@ -23,5 +23,4 @@ export class Main {
         this.element.remove();
         this.isMounted = false;
     };
-
 }
