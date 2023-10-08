@@ -1,62 +1,62 @@
 import { addContainer } from "../addContainer";
 
 export class Order {
-    static instance = null;
+  static instance = null;
 
-    constructor() {
-        if (!Order.instance) {
-            Order.instance = this;
-            this.element = document.createElement('section');
-            this.element.classList.add('order');
-            this.containerElement = addContainer(this.element);
-            this.isMounted = false;
-        }
-        return Order.instance;
+  constructor() {
+    if (!Order.instance) {
+      Order.instance = this;
+      this.element = document.createElement('section');
+      this.element.classList.add('order');
+      this.containerElement = addContainer(this.element);
+      this.isMounted = false;
     }
+    return Order.instance;
+  }
 
-    mount(parent) {
-        const title = this.getOrderTitle();
-        const info = this.getOrderInfo();
-        const returnLink = this.getReturnLink();
-
-        this.containerElement.append(title, info, returnLink);
-
-        if (this.isMounted) {
-            return;
-        }
-
-        parent.append(this.element);
-        this.isMounted = true;
-    }
-
-    unmount() {
-        this.element.remove();
-        this.isMounted = false;
+  mount(parent) {
+    if (this.isMounted) {
+      return;
     };
 
-    getOrderTitle() {
-        const title = document.createElement('div');
-        title.classList.add('order__title');
-        const titleText = document.createElement('h2');
-        titleText.classList.add('order__title-text');
-        titleText.textContent = 'Заказ успешно размещен';
-        const orderPrice = document.createElement('p');
-        orderPrice.classList.add('order__title-price');
-        orderPrice.textContent = '20 000 ₽';
-        title.append(titleText, orderPrice);
-        return title;
-    };
+    const title = this.getOrderTitle();
+    const info = this.getOrderInfo();
+    const returnLink = this.getReturnLink();
 
-    getOrderInfo() {
-        const orderLink = document.createElement('a');
-        orderLink.classList.add('order__link');
-        orderLink.href = '/order';
-        const orderNumber = document.createElement('p');
-        orderNumber.classList.add('order__title-number');
-        orderNumber.textContent = '№43435';
-        orderLink.append(orderNumber);
+    this.containerElement.append(title, info, returnLink);
 
-        orderLink.insertAdjacentHTML('beforeend', `
+    parent.append(this.element);
+    this.isMounted = true;
+  }
+
+  unmount() {
+    this.element.remove();
+    this.isMounted = false;
+  };
+
+  getOrderTitle() {
+    const title = document.createElement('div');
+    title.classList.add('order__title');
+    const titleText = document.createElement('h2');
+    titleText.classList.add('order__title-text');
+    titleText.textContent = 'Заказ успешно размещен';
+    const orderPrice = document.createElement('p');
+    orderPrice.classList.add('order__title-price');
+    orderPrice.textContent = '20 000 ₽';
+    title.append(titleText, orderPrice);
+    return title;
+  };
+
+  getOrderInfo() {
+    const orderLink = document.createElement('a');
+    orderLink.classList.add('order__link');
+    orderLink.href = '/order';
+    const orderNumber = document.createElement('p');
+    orderNumber.classList.add('order__title-number');
+    orderNumber.textContent = '№43435';
+    orderLink.append(orderNumber);
+
+    orderLink.insertAdjacentHTML('beforeend', `
         <div class="order__characters">
           <h3 class="order__characteristics-title">Данные доставки</h3>
           <table class="order__characteristics-table order-table">
@@ -87,14 +87,14 @@ export class Order {
           </table>
         </div>
         `);
-        return orderLink;
-    };
+    return orderLink;
+  };
 
-    getReturnLink() {
-        const returnLink = document.createElement('a');
-        returnLink.classList.add('order__btn');
-        returnLink.href = '/';
-        returnLink.textContent = 'На главную';
-        return returnLink;
-    };
+  getReturnLink() {
+    const returnLink = document.createElement('a');
+    returnLink.classList.add('order__btn');
+    returnLink.href = '/';
+    returnLink.textContent = 'На главную';
+    return returnLink;
+  };
 };

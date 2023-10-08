@@ -6,6 +6,7 @@ import { Footer } from './modules/Footer/Footer';
 import { Main } from './modules/Main/Main';
 import { Order } from './modules/Order/Order';
 import { ProductList } from './modules/ProductList/ProductList';
+import { ApiService } from './services/ApiService';
 
 const productSlider = () => {
     Promise.all([
@@ -35,6 +36,8 @@ const productSlider = () => {
 };
 
 const init = () => {
+    const api = new ApiService();
+
     new Header().mount();
     new Main().mount();
     new Footer().mount();
@@ -49,10 +52,11 @@ const init = () => {
     const router = new Navigo("/", { linksSelector: 'a[href^="/"]' });
 
     router
-        .on("/", () => {
-            console.log('на главной');
-            new ProductList().mount(new Main().element, [1, 2, 3, 5, 6]);
-        }, {
+        .on("/",
+            async () => {
+                const product = await api.getProducts();
+                new ProductList().mount(new Main().element, product);
+            }, {
             leave(done) {
                 console.log('leave')
                 done()
