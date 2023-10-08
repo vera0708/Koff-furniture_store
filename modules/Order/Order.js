@@ -14,18 +14,18 @@ export class Order {
         return Order.instance;
     }
 
-    mount() {
-        if (this.isMounted) {
-            return;
-        }
-
+    mount(parent) {
         const title = this.getOrderTitle();
         const info = this.getOrderInfo();
         const returnLink = this.getReturnLink();
 
         this.containerElement.append(title, info, returnLink);
 
-        document.body.append(this.element);
+        if (this.isMounted) {
+            return;
+        }
+
+        parent.append(this.element);
         this.isMounted = true;
     }
 

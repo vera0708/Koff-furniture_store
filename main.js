@@ -37,7 +37,6 @@ const productSlider = () => {
 const init = () => {
     new Header().mount();
     new Main().mount();
-    new Order().mount();
     new Footer().mount();
     // const header = new Header();
     // console.log('new Header(): ', header);
@@ -52,7 +51,7 @@ const init = () => {
     router
         .on("/", () => {
             console.log('на главной');
-            new ProductList().mount(new Main().element, [1, 2, 3]);
+            new ProductList().mount(new Main().element, [1, 2, 3, 5, 6]);
         }, {
             leave(done) {
                 console.log('leave')
@@ -64,9 +63,21 @@ const init = () => {
         })
         .on("/category", (obj) => {
             console.log('category', obj);
+            new ProductList().mount(new Main().element, [5, 6, 1, 2, 3, 7, 8], 'Category');
+        }, {
+            leave(done) {
+                console.log('leave category')
+                done()
+            },
         })
         .on("/favorite", () => {
             console.log('favorite');
+            new ProductList().mount(new Main().element, [7, 8, 5, 6, 1], 'favorite');
+        }, {
+            leave(done) {
+                console.log('leave category')
+                done()
+            },
         })
         .on("/search", () => {
             console.log('search');
@@ -79,10 +90,24 @@ const init = () => {
         })
         .on("/order", () => {
             console.log('order');
+            new Order().mount(new Main().element);
+        }, {
+            leave(done) {
+                console.log('leave order')
+                done()
+            },
         })
         .notFound(() => {
-            console.log(404);
-        })
+            new Main().element.innerHTML = `
+            <h2>Страница не найдена</h2>
+            <p>Через 5 секунд вы будете перенаправлены
+                <a>на главную страницу</a>
+            </p>`;
+
+            setTimeout(() => {
+                router.navigate('/');
+            }, 5000);
+        });
 
     router.resolve();
 };
