@@ -21,6 +21,10 @@ export class ApiService {
         }
     };
 
+    async setAccessKey(obj) {
+        localStorage.setItem('accessKey', obj);
+    }
+
     async getData(pathname, params = {}) {
         if (!this.accessKey) {
             await this.getAccessKey();

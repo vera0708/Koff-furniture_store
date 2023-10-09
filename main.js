@@ -108,14 +108,23 @@ const init = () => {
         })
         .notFound(() => {
             new Main().element.innerHTML = `
-            <h2>Страница не найдена</h2>
-            <p>Через 5 секунд вы будете перенаправлены
-                <a>на главную страницу</a>
+            <h2 style="font-size: 48px; text-align: center; color: #780096; margin-top: 25px; margin-bottom: 35px;">Страница не найдена</h2>
+            <p style="font-size: 38px; text-align: center; color: #de5675; margin-bottom: 25px;">404 ошибка</p>
+            <p style="font-size: 18px; text-align: center; margin-bottom: 25px;"
+            >Запрашиваемая вами страница отсутствует. <br>
+            Проверьте правильность адреса страницы</p>
+            <p style="font-size: 16px; text-align: center; margin-bottom: 25px;">Через 5 секунд вы будете перенаправлены
+                <a style="color: #559de0; "font-size: 18px;">на главную страницу</a>
             </p>`;
 
             setTimeout(() => {
                 router.navigate('/');
             }, 5000);
+        }, {
+            leave(done) {
+                new Main().element.remove();
+                done()
+            },
         });
 
     router.resolve();
