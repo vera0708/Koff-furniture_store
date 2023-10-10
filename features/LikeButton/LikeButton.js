@@ -14,7 +14,9 @@ export class LikeButton {
             console.log(`Добавить товар ${id} в избранное`);
         });
 
-        button.innerHTML = likeSvg();
+        likeSvg().then((svg) => {
+            button.append(svg);
+        });
 
         return button;
     }
