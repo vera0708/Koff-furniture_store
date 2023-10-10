@@ -18,7 +18,7 @@
 
 	&__img {
 		width: 100%;
-		object-fit: contain;
+		object-fit: cover;
 		border-radius: 16px;
 		aspect-ratio: 7/6;
 
@@ -74,19 +74,19 @@
 		&:hover,
 		&:focus-visible {
 			color: #fff;
+			border-color: #9200B7;
 			background-color: #9200B7;
 		}
 
 		&:active,
 		&_active {
-			color: #780096;
-			background-color: #fff;
+			color: #CC00FF;
+			background-color: transparent;
 			border-color: #CC00FF;
 
 			&:hover,
 			&:focus-visible {
 				color: #780096;
-				;
 			}
 		}
 
@@ -101,5 +101,26 @@
 		position: absolute;
 		top: 12px;
 		right: 12px;
+
+		svg {
+			fill: #fff;
+		}
+
+		&:hover,
+		&_active {
+			color: #780096;
+
+			svg {
+				fill: #780096;
+			}
+		}
+
+		&:active {
+			color: #CC00FF;
+
+			svg {
+				fill: #CC00FF;
+			}
+		}
 	}
 }

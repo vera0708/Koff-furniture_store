@@ -1,55 +1,41 @@
+import { Logo } from "../../features/Logo/Logo";
 import { addContainer } from "../addContainer";
-import logoImg from '/img/logo.svg'
 
 export class Footer {
-    static instance = null;
+  static instance = null;
 
-    constructor() {
-        if (!Footer.instance) {
-            Footer.instance = this;
-            this.element = document.createElement('footer');
-            this.element.classList.add('footer');
-            this.containerElement = addContainer(this.element, 'footer__container');
-            this.isMounted = false;
-        }
-        return Footer.instance;
+  constructor() {
+    if (!Footer.instance) {
+      Footer.instance = this;
+      this.element = document.createElement('footer');
+      this.element.classList.add('footer');
+      this.containerElement = addContainer(this.element, 'footer__container');
+      this.isMounted = false;
+    }
+    return Footer.instance;
+  }
+
+  mount() {
+    if (this.isMounted) {
+      return;
     }
 
-    mount() {
-        if (this.isMounted) {
-            return;
-        }
+    const logo = new Logo('footer').create();
 
-        const logo = this.getLogo();
+    this.containerElement.append(logo);
+    this.containerElement.insertAdjacentHTML('beforeend', this.getHTML());
 
-        this.containerElement.append(logo);
-        this.containerElement.insertAdjacentHTML('beforeend', this.getHTML());
+    document.body.append(this.element);
+    this.isMounted = true;
+  }
 
-        document.body.append(this.element);
-        this.isMounted = true;
-    }
+  unmount() {
+    this.element.remove();
+    this.isMounted = false;
+  };
 
-    unmount() {
-        this.element.remove();
-        this.isMounted = false;
-    };
-
-    getLogo() {
-        const logo = document.createElement('a');
-        logo.classList.add('footer__link-logo');
-        logo.href = '/';
-
-        const imgLogo = new Image();
-        imgLogo.classList.add('footer__logo');
-        imgLogo.src = logoImg;
-        imgLogo.alt = 'Логотип мебельного магазина Koff';
-
-        logo.append(imgLogo);
-        return logo;
-    };
-
-    getHTML() {
-        return `
+  getHTML() {
+    return `
         <div class="footer__contacts contacts">
         <a href="tel:+7 (939) 839 12 97" class="contacts__phone">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,5 +89,5 @@ export class Footer {
       </ul>
       <p class="footer__copyright">© Koff, 2023</p>
         `;
-    }
+  }
 };
