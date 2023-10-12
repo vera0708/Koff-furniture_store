@@ -19,10 +19,3 @@ export class Logo {
         return logo;
     }
 }
-
-
-
-/*
-export const getLogo = (mainClassName) => {
-тоже, что в create(), но без this.
-}; */

@@ -17,7 +17,7 @@ export class ProductList {
     return ProductList.instance;
   }
 
-  mount(parent, data, title) {
+  mount(parent, data, title, emptyText) {
     this.containerElement.textContent = '';
     const titleElem = document.createElement('h2');
     titleElem.textContent = title ? title : 'Список товаров';
@@ -25,7 +25,19 @@ export class ProductList {
     titleElem.className = title ? 'goods__title' : 'goods__title visually-hidden';
 
     this.containerElement.append(titleElem);
-    this.updateListElem(data);
+    if (data && data.length) {
+      this.updateListElem(data);
+    } else {
+      this.containerElement.insertAdjacentHTML('beforeend', `
+      <p class="goods__empty"
+      style="font-size: 38px;
+      text-align: center;
+      color: #de5675;
+      margin-bottom: 25px;"
+      >${emptyText
+        || 'Произошла ошибка, попробуйте снова'
+        }</p>`)
+    }
 
     if (this.isMounted) {
       return;
@@ -55,30 +67,4 @@ export class ProductList {
     listElem.append(...listItems);
     this.containerElement.append(listElem);
   };
-
-  /*getHTMLTemplateItem({ id, images: [image], name: title, price }) {
-    return `
-            <article class="goods__card card">
-              <a href="/product/${id}" class="card__link card__link_img">
-                <img src="${API_URL}${image}" alt="${title}" class="card__img">
-              </a>
-              <div class="card__info">
-                <h3 class="card__title">
-                  <a href="/product/${id}" class="card__link">
-                    ${title}
-                  </a>
-                </h3>
-                <p class="card__price">${price.toLocaleString()}&nbsp;₽</p>
-              </div>
-              <button class="card__btn" data-id='${id}'>В корзину</button>
-              <button class="card__favorite" data-id='${id}'>
-                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M8.41325 13.8733C8.18658 13.9533 7.81325 13.9533 7.58658 13.8733C5.65325 13.2133 1.33325 10.46 1.33325 5.79332C1.33325 3.73332 2.99325 2.06665 5.03992 2.06665C6.25325 2.06665 7.32658 2.65332 7.99992 3.55998C8.67325 2.65332 9.75325 2.06665 10.9599 2.06665C13.0066 2.06665 14.6666 3.73332 14.6666 5.79332C14.6666 10.46 10.3466 13.2133 8.41325 13.8733Z"
-                    stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </button>
-            </article>
-        `;
-  }*/
 }

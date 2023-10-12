@@ -51,15 +51,17 @@ export class ApiService {
         }
     };
 
-    async getProducts(page = 1, limit = 12, list, category, q) {
-        return await this.getData('api/products', {
-            page,
-            limit,
-            list,
-            category,
-            q,
-        });
+    async getProducts(params) {
+        // if (params.list) {
+        //     params.list = params.list.joint(',');
+        // }
+        return await this.getData('api/products', params);
     };
+    /*  async getProducts(page = 1, limit = 12, list, category, q) {
+        return await this.getData('api/products', {
+            page,  limit,  list, category,  q,
+        });
+    };   */
 
     async getProductCategories() {
         return await this.getData('api/productCategories');

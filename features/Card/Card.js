@@ -50,13 +50,3 @@ export class Card {
         return article;
     }
 }
-/**
-getHTMLTemplateItem({ id, images: [image], name: title, price }) {
-    return `
-        <article >
-              <button class="card__btn" data-id='${id}'>В корзину</button>
-              <button class="card__favorite" data-id='${id}'>
-              </button>
-         </article>
-        `;  }
- */
