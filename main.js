@@ -9,6 +9,7 @@ import { ProductList } from './modules/ProductList/ProductList';
 import { ApiService } from './services/ApiService';
 import { Catalog } from './modules/Catalog/Catalog';
 import { FavoriteService } from './services/storageService';
+import { Pagination } from './features/Pagination/Pagination';
 
 const productSlider = () => {
     Promise.all([
@@ -69,9 +70,16 @@ const init = async () => {
         },
         )
         .on("/category",
-            async ({ params: { slug } }) => {
-                const { data: products } = await api.getProducts({ category: slug });
+            async ({ params: { slug, page } }) => {
+                const { data: products, pagination } = await api.getProducts(
+                    {
+                        category: slug,
+                        page: page || 1,
+                    });
                 new ProductList().mount(new Main().element, products, slug);
+                new Pagination()
+                    .mount(new ProductList().containerElement)
+                    .update(pagination);
                 router.updatePageLinks();
             }, {
             leave(done) {
@@ -82,7 +90,6 @@ const init = async () => {
         .on("/favorite",
             async () => {
                 const favorite = new FavoriteService().get();
-                // console.log('favoriteList: ', favoriteList.join(','));
                 const { data: product } = await api.getProducts(
                     { list: favorite.join(',') });
                 new ProductList().mount(new Main().element, product,

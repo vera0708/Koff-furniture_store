@@ -41,7 +41,6 @@ export class FavoriteService extends StorageService {
         if (data) {
             const favorite = JSON.parse(data);
             if (Array.isArray(favorite)) {
-                console.log('favorite: ', favorite);
                 return favorite;
             }
         };
