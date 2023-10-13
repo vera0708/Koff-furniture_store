@@ -10,6 +10,7 @@ import { ApiService } from './services/ApiService';
 import { Catalog } from './modules/Catalog/Catalog';
 import { FavoriteService } from './services/storageService';
 import { Pagination } from './features/Pagination/Pagination';
+import { BreadCrumbs } from './features/BreadCrumbs/BreadCrumbs';
 
 const productSlider = () => {
     Promise.all([
@@ -38,30 +39,32 @@ const productSlider = () => {
     });
 };
 
+export const router = new Navigo("/", { linksSelector: 'a[href^="/"]' });
+
 const init = async () => {
     const api = new ApiService();
-    const router = new Navigo("/", { linksSelector: 'a[href^="/"]' });
 
     new Header().mount();
     new Main().mount();
     new Footer().mount();
 
-    await api.getProductCategories().then(data => {
-        new Catalog().mount(new Main().element, data);
-        router.updatePageLinks();
-    });
-
+    // await api.getProductCategories().then(data => {
+    //     new Catalog().mount(new Main().element, data);
+    //     router.updatePageLinks();
+    // });
     productSlider();
 
     router
         .on("/",
             async () => {
+                new Catalog().mount(new Main().element);
                 const products = await api.getProducts();
                 new ProductList().mount(new Main().element, products);
                 router.updatePageLinks();
             }, {
             leave(done) {
                 new ProductList().unmount();
+                new Catalog().unmount();
                 done()
             },
             already(match) {
@@ -70,12 +73,15 @@ const init = async () => {
         },
         )
         .on("/category",
-            async ({ params: { slug, page } }) => {
+            async ({ params: { slug, page = 1 } }) => {
+                new Catalog().mount(new Main().element);
                 const { data: products, pagination } = await api.getProducts(
                     {
                         category: slug,
-                        page: page || 1,
+                        page: page,
                     });
+
+                new BreadCrumbs().mount(new Main().element, [{ text: slug }]);
                 new ProductList().mount(new Main().element, products, slug);
                 new Pagination()
                     .mount(new ProductList().containerElement)
@@ -83,24 +89,35 @@ const init = async () => {
                 router.updatePageLinks();
             }, {
             leave(done) {
+                new BreadCrumbs().unmount();
                 new ProductList().unmount();
+                new Catalog().unmount();
                 done()
             },
         })
         .on("/favorite",
-            async () => {
+            async ({ params }) => {
+                new Catalog().mount(new Main().element);
                 const favorite = new FavoriteService().get();
                 const { data: products, pagination } = await api.getProducts(
-                    { list: favorite.join(',') });
-                new ProductList().mount(new Main().element, products,
-                    'Избранное', 'Вы ещё ничего не добавили в Избранное');
+                    {
+                        list: favorite.join(','),
+                        page: params?.page || 1
+                    });
+                new BreadCrumbs().mount(new Main().element, [{ text: 'Избранное' }]);
+                new ProductList().mount(new Main().element,
+                    products,
+                    'Избранное',
+                    'Вы ещё ничего не добавили в Избранное');
                 new Pagination()
                     .mount(new ProductList().containerElement)
                     .update(pagination);
                 router.updatePageLinks();
             }, {
             leave(done) {
+                new BreadCrumbs().unmount();
                 new ProductList().unmount();
+                new Catalog().unmount();
                 done()
             },
             already(match) {
@@ -112,6 +129,7 @@ const init = async () => {
             console.log('search');
         })
         .on("/product/:id", (obj) => {
+            //  new Catalog().mount(new Main().element);
             console.log('obj:  ', obj)
         })
         .on("/cart", () => {

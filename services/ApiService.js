@@ -9,7 +9,6 @@ export class ApiService {
         this.accessKeyService = new AccessKeyService('accessKey');
         this.accessKey = this.accessKeyService.get();
         // this.accessKey = localStorage.getItem('accessKey');
-        console.log('this.accessKey: ', this.accessKey)
     };
 
     async getAccessKey() {
@@ -52,9 +51,6 @@ export class ApiService {
     };
 
     async getProducts(params) {
-        // if (params.list) {
-        //     params.list = params.list.joint(',');
-        // }
         return await this.getData('api/products', params);
     };
     /*  async getProducts(page = 1, limit = 12, list, category, q) {
