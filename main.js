@@ -94,9 +94,6 @@ const init = async () => {
                     { list: favorite.join(',') });
                 new ProductList().mount(new Main().element, products,
                     'Избранное', 'Вы ещё ничего не добавили в Избранное');
-                new Pagination()
-                    .mount(new ProductList().containerElement)
-                    .update(pagination);
                 router.updatePageLinks();
             }, {
             leave(done) {
