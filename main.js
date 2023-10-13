@@ -90,10 +90,13 @@ const init = async () => {
         .on("/favorite",
             async () => {
                 const favorite = new FavoriteService().get();
-                const { data: product } = await api.getProducts(
+                const { data: products, pagination } = await api.getProducts(
                     { list: favorite.join(',') });
-                new ProductList().mount(new Main().element, product,
+                new ProductList().mount(new Main().element, products,
                     'Избранное', 'Вы ещё ничего не добавили в Избранное');
+                new Pagination()
+                    .mount(new ProductList().containerElement)
+                    .update(pagination);
                 router.updatePageLinks();
             }, {
             leave(done) {
