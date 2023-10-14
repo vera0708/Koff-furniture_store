@@ -96,6 +96,9 @@ const init = async () => {
                 new Catalog().unmount();
                 done()
             },
+            already(match) {
+                match.route.handler(match)
+            },
         })
         .on("/favorite",
             async ({ params }) => {
@@ -124,12 +127,37 @@ const init = async () => {
             },
             already(match) {
                 match.route.handler(match)
+            },
+        },
+        )
+        .on("/search",
+            async ({ params: { q } }) => {
+                new Catalog().mount(new Main().element);
+                const { data: products, pagination } = await api.getProducts(
+                    {
+                        q,
+                    });
+                new BreadCrumbs().mount(new Main().element, [{ text: 'Поиск' }]);
+                new ProductList().mount(new Main().element,
+                    products,
+                    `Поиск: ${q}`,
+                    `Ничего не найдено по вашему запросу  ${q}`);
+                new Pagination()
+                    .mount(new ProductList().containerElement)
+                    .update(pagination);
+                router.updatePageLinks();
+            }, {
+            leave(done) {
+                new BreadCrumbs().unmount();
+                new ProductList().unmount();
+                new Catalog().unmount();
+                done()
+            },
+            already(match) {
+                match.route.handler(match)
             }
         },
         )
-        .on("/search", () => {
-            console.log('search');
-        })
         .on("/product/:id", async (obj) => {
             new Catalog().mount(new Main().element);
             const data = await api.getProductById(obj.data.id);
