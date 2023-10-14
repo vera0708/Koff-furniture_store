@@ -114,9 +114,12 @@ const init = async () => {
                     products,
                     'Избранное',
                     'Вы ещё ничего не добавили в Избранное');
+
+                // if (pagination?.totalProducts > pagination?.limit) {
                 new Pagination()
                     .mount(new ProductList().containerElement)
                     .update(pagination);
+                // }
                 router.updatePageLinks();
             }, {
             leave(done) {
