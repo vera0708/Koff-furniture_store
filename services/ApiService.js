@@ -16,7 +16,7 @@ export class ApiService {
             if (!this.accessKey) {
                 const response = await axios.get(`${this.#apiUrl}api/users/accessKey`);
                 this.accessKey = response.data.accessKey;
-                this.accessKey = this.accessKeyService.set(this.accessKey);
+                this.accessKeyService.set(this.accessKey);
                 // localStorage.setItem('accessKey', this.accessKey);
             }
         } catch (error) {

@@ -11,33 +11,35 @@ import { Catalog } from './modules/Catalog/Catalog';
 import { FavoriteService } from './services/storageService';
 import { Pagination } from './features/Pagination/Pagination';
 import { BreadCrumbs } from './features/BreadCrumbs/BreadCrumbs';
+import { ProductCard } from './modules/ProductCard/ProductCard';
+import { productSlider } from './features/ProductSlider/ProductSlider';
 
-const productSlider = () => {
-    Promise.all([
-        import('swiper/modules'),
-        import('swiper'),
-        import('swiper/css')
-    ]).then(([{ Navigation, Thumbs }, Swiper]) => {
-        const swiperThumbnails = new Swiper.default(".product__slider-thumbnails", {
-            spaceBetween: 10,
-            slidesPerView: 4,
-            freeMode: true,
-            watchSlidesProgress: true,
-        });
+// const productSlider = () => {
+//     Promise.all([
+//         import('swiper/modules'),
+//         import('swiper'),
+//         import('swiper/css')
+//     ]).then(([{ Navigation, Thumbs }, Swiper]) => {
+//         const swiperThumbnails = new Swiper.default(".product__slider-thumbnails", {
+//             spaceBetween: 10,
+//             slidesPerView: 4,
+//             freeMode: true,
+//             watchSlidesProgress: true,
+//         });
 
-        new Swiper.default(".product__slider-main", {
-            spaceBetween: 10,
-            navigation: {
-                nextEl: ".product__arrow_next",
-                prevEl: ".product__arrow_prev",
-            },
-            modules: [Navigation, Thumbs],
-            thumbs: {
-                swiper: swiperThumbnails,
-            },
-        });
-    });
-};
+//         new Swiper.default(".product__slider-main", {
+//             spaceBetween: 10,
+//             navigation: {
+//                 nextEl: ".product__arrow_next",
+//                 prevEl: ".product__arrow_prev",
+//             },
+//             modules: [Navigation, Thumbs],
+//             thumbs: {
+//                 swiper: swiperThumbnails,
+//             },
+//         });
+//     });
+// };
 
 export const router = new Navigo("/", { linksSelector: 'a[href^="/"]' });
 
@@ -128,10 +130,31 @@ const init = async () => {
         .on("/search", () => {
             console.log('search');
         })
-        .on("/product/:id", (obj) => {
-            //  new Catalog().mount(new Main().element);
+        .on("/product/:id", async (obj) => {
+            new Catalog().mount(new Main().element);
+            const data = await api.getProductById(obj.data.id);
+            console.log('data: ', data);
+            new BreadCrumbs().mount(new Main().element, [
+                {
+                    text: data.category,
+                    href: `/category?slug=${data.category}`
+                },
+                {
+                    text: data.name,
+                }
+            ]);
+            new ProductCard().mount(new Main().element, data);
+            productSlider();
             console.log('obj:  ', obj)
-        })
+        }, {
+            leave(done) {
+                new BreadCrumbs().unmount();
+                new Catalog().unmount();
+                new ProductCard().unmount()
+                done()
+            }
+        }
+        )
         .on("/cart", () => {
             console.log('cart');
         })
