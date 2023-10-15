@@ -13,6 +13,7 @@ import { Pagination } from './features/Pagination/Pagination';
 import { BreadCrumbs } from './features/BreadCrumbs/BreadCrumbs';
 import { ProductCard } from './modules/ProductCard/ProductCard';
 import { productSlider } from './features/ProductSlider/ProductSlider';
+import { Cart } from './modules/Cart/Cart';
 
 // const productSlider = () => {
 //     Promise.all([
@@ -186,8 +187,11 @@ const init = async () => {
             }
         }
         )
-        .on("/cart", () => {
-            console.log('cart');
+        .on("/cart", async () => {
+            const cartItem = await api.getCart();
+            new Cart().mount(new Main().element,
+                cartItem,
+                'Корзина пуста, добавьте товары');
         })
         .on("/order", () => {
             console.log('order');
