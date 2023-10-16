@@ -77,7 +77,7 @@ const init = async () => {
         )
         .on("/category",
             async ({ params: { slug, page = 1 } }) => {
-                new Catalog().mount(new Main().element);
+                (await new Catalog().mount(new Main().element)).setActiveLink(slug);
                 const { data: products, pagination } = await api.getProducts(
                     {
                         category: slug,
@@ -199,15 +199,12 @@ const init = async () => {
             }
         })
         .on("/order/:id", ({ data: { id } }) => {
-            console.log(`order: ${id}`);
-
             api.getOrder(id).then(data => {
-                console.log('data from order: ', data)
             })
             // new Order().mount(new Main().element);
         }, {
             leave(done) {
-                // new Main().element.remove();
+                // new Order().unmount();
                 console.log('leave order')
                 done()
             },

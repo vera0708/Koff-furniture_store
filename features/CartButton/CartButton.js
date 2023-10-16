@@ -14,6 +14,7 @@ export class CartButton {
         button.textContent = this.text;
 
         button.addEventListener('click', async () => {
+            //   add preloader
             const { totalCount } = await new ApiService().postProductToCart(id);
             new Header().changeCount(totalCount);
         })
