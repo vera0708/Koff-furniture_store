@@ -96,7 +96,7 @@ export class ApiService {
         }
     };
 
-    async changeQuantityProductToCart(productId, quantity = 1) {
+    async updateQuantityProductToCart(productId, quantity = 1) {
         if (!this.accessKey) {
             await this.getAccessKey();
         };

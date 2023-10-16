@@ -192,6 +192,11 @@ const init = async () => {
             new Cart().mount(new Main().element,
                 cartItem,
                 'Корзина пуста, добавьте товары');
+        }, {
+            leave(done) {
+                new Cart().unmount();
+                done()
+            }
         })
         .on("/order", () => {
             console.log('order');

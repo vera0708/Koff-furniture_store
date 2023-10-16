@@ -1,4 +1,6 @@
 import { API_URL } from "../../const";
+import { debounce } from "../../helper";
+import { ApiService } from "../../services/ApiService";
 import { addContainer } from "../addContainer";
 
 export class Cart {
@@ -10,8 +12,8 @@ export class Cart {
             this.element = document.createElement('section');
             this.element.classList.add('cart');
             this.containerElement = addContainer(this.element, 'cart__container');
-
             this.isMounted = false;
+            this.debUpdataCart = debounce(this.updateCart.bind(this), 300);
         }
         return Cart.instance;
     };
@@ -20,6 +22,7 @@ export class Cart {
         if (this.isMounted) {
             return;
         };
+        this.containerElement.textContent = '';
 
         const title = document.createElement('h2');
         title.classList.add("cart__title");
@@ -43,19 +46,7 @@ export class Cart {
       >${emptyText
                 || 'Произошла ошибка, попробуйте снова'
                 }</p>`)
-        }
-
-        /*products: [{id: 5, 
-           article: "16954071925", 
-           name: "Стол компьютерный Ascetic", 
-           price: 1795,…}]
-               0: {id: 5, 
-                   article: "16954071925", 
-                   name: "Стол компьютерный Ascetic", 
-                   price: 1795,…}
-   totalCount: 1
-   totalPrice: 1795
-        */
+        };
         parent.prepend(this.element);
         this.isMounted = true;
     }
@@ -63,6 +54,30 @@ export class Cart {
     unmount() {
         this.element.remove();
         this.isMounted = false;
+    };
+
+    updateCart(id, quantity) {
+        if (quantity === 0) {
+            new ApiService().deleteProductFromCart(id);
+            this.cartData.products = this.cartData.products.filter(
+                item => item.id !== id
+            );
+        } else {
+            new ApiService().updateQuantityProductToCart(id, quantity);
+            this.cartData.products.forEach(item => {
+                if (item.id === id) {
+                    item.quantity = quantity;
+                }
+            });
+        };
+
+        this.cartData.totalPrice = this.cartData.products.reduce(
+            (acc, item) => acc + item.price * item.quantity,
+            0,
+        );
+
+        this.placeCount.innerHTML = `${this.cartData.totalCount} товара на сумму:`;
+        this.placePrice.innerHTML = `${this.cartData.totalPrice.toLocaleString()}&nbsp;₽`;
     };
 
     renderProducts() {
@@ -84,7 +99,8 @@ export class Cart {
 
             const price = document.createElement('p');
             price.classList.add('cart__price');
-            price.innerHTML = `${(item.price * item.quantity).toLocaleString()}&nbsp;₽`;
+            price.innerHTML = `${(item.price * item.quantity)
+                .toLocaleString()}&nbsp;₽`;
             const article = document.createElement('p');
             article.classList.add('cart__article');
             article.innerHTML = `арт. ${item.article}`;
@@ -95,14 +111,44 @@ export class Cart {
             const cartProductBtnMinus = document.createElement('button');
             cartProductBtnMinus.classList.add('cart__product-btn');
             cartProductBtnMinus.textContent = '-';
+
             const cartProductCount = document.createElement('p');
             cartProductCount.classList.add('cart__product-count');
             cartProductCount.textContent = item.quantity;
+
             const cartProductBtnPlus = document.createElement('button');
             cartProductBtnPlus.classList.add('cart__product-btn');
             cartProductBtnPlus.textContent = '+';
 
             productControl.append(cartProductBtnMinus, cartProductCount, cartProductBtnPlus);
+
+            cartProductBtnMinus.addEventListener('click', async () => {
+                if (item.quantity) {
+                    item.quantity--;
+                    cartProductCount.textContent = item.quantity;
+
+                    if (item.quantity === 0) {
+                        listItemElem.remove();
+                        this.debUpdataCart(item.id, item.quantity);
+                        return;
+                    };
+
+                    price.innerHTML = `${(item.price * item.quantity)
+                        .toLocaleString()}&nbsp;₽`;
+
+                    this.debUpdataCart(item.id, item.quantity);
+                }
+            });
+
+            cartProductBtnPlus.addEventListener('click', () => {
+                item.quantity++;
+                cartProductCount.textContent = item.quantity;
+                price.innerHTML = `${(item.price * item.quantity)
+                    .toLocaleString()}&nbsp;₽`;
+
+                this.debUpdataCart(item.id, item.quantity);
+            });
+
             listItemElem.append(img, title, price, article, productControl);
 
             return listItemElem;
@@ -153,41 +199,70 @@ export class Cart {
     renderForm() {
         const form = document.createElement('form');
         form.classList.add('cart__form', 'form-order');
-        form.id = 'form';
+        form.id = 'order';
         form.method = 'POST';
+
+        const title = document.createElement('h3');
+        title.classList.add('cart__subtitle', 'cart__subtitle_form-order');
+        title.textContent = 'Данные для доставки';
+
         form.innerHTML = `
-          <h3 class="cart__subtitle cart__subtitle_form-order">Данные для доставки</h3>
-          <fieldset class="form-order__fieldset form-order__fieldset_input">
-            <input class="form-order__input" type="text" name="name" placeholder="Фамилия Имя Отчество">
-            <input class="form-order__input" type="tel" name="phone" placeholder="Телефон">
-            <input class="form-order__input" type="email" name="email" placeholder="E-mail">
-            <input class="form-order__input" type="text" name="address" placeholder="Адрес доставки">
-            <textarea class="form-order__textarea" name="comments" placeholder="Комментарий к заказу"></textarea>
-          </fieldset>
-          <fieldset class="form-order__fieldset form-order__fieldset_radio">
+        <fieldset class="form-order__fieldset form-order__fieldset_input">
+            <input class="form-order__input" type="text" name="name"
+               required placeholder="Фамилия Имя Отчество">
+            <input class="form-order__input" type="tel" name="phone"
+               required placeholder="Телефон">
+            <input class="form-order__input" type="email" name="email"
+               required placeholder="E-mail">
+            <input class="form-order__input" type="text" name="address"
+                placeholder="Адрес доставки">
+            <textarea class="form-order__textarea" name="comments"
+                placeholder="Комментарий к заказу"></textarea>
+        </fieldset>
+        <fieldset class="form-order__fieldset form-order__fieldset_radio">
             <legend class="form-order__legend">Доставка</legend>
             <label class="form-order__label radio">
-              <input class="radio__input" type="radio" name="deliveryType" value="delivery">
+              <input class="radio__input" type="radio" name="deliveryType"
+                value="delivery">
               Доставка
             </label>
             <label class="form-order__label radio">
-              <input class="radio__input" type="radio" name="deliveryType" value="pick-up">
-              Самовывоз
+              <input class="radio__input" type="radio" name="deliveryType"
+                required value="pick-up">
+                Самовывоз
             </label>
-          </fieldset>
-          <fieldset class="form-order__fieldset form-order__fieldset_radio">
+        </fieldset>
+        <fieldset class="form-order__fieldset form-order__fieldset_radio">
             <legend class="form-order__legend">Оплата</legend>
             <label class="form-order__label radio">
-              <input class="radio__input" type="radio" name="paymentType" value="card">
-              Картой при получении
+               <input class="radio__input" type="radio" name="paymentType" 
+                 required value="card">
+                 Картой при получении
             </label>
             <label class="form-order__label radio">
-              <input class="radio__input" type="radio" name="paymentType" value="cash">
-              Наличными при получении
+                <input class="radio__input" type="radio" name="paymentType" 
+                  required value="cash">
+                  Наличными при получении
             </label>
-          </fieldset>
+        </fieldset>
         `;
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            console.log('Происходит отправка заказа');
+        })
 
         this.containerElement.append(form);
     };
 };
+/*products: [{id: 5,
+   article: "16954071925", 
+   name: "Стол компьютерный Ascetic", 
+   price: 1795,…}]
+       0: {id: 5, 
+           article: "16954071925", 
+           name: "Стол компьютерный Ascetic", 
+           price: 1795,…}
+totalCount: 1
+totalPrice: 1795
+*/
