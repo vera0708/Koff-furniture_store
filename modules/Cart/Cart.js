@@ -1,5 +1,6 @@
 import { API_URL } from "../../const";
 import { debounce } from "../../helper";
+import { router } from "../../main";
 import { ApiService } from "../../services/ApiService";
 import { addContainer } from "../addContainer";
 
@@ -226,7 +227,7 @@ export class Cart {
         const email = document.createElement('input');
         email.classList.add('form-order__input');
         email.type = "email";
-        email.name = "phone";
+        email.name = "email";
         email.required = true;
         email.placeholder = "E-mail";
 
@@ -321,10 +322,15 @@ export class Cart {
 
         form.append(title, inputFieldset, radioDeliveryFieldset, radioPaymentFieldset);
 
-        form.addEventListener('submit', e => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            // new ApiService()
-            console.log('отправка заказа');
+
+            const data = Object.fromEntries(new FormData(form));
+
+            const { orderId } = await new ApiService().postOrder(data);
+
+            router.navigate(`/order/${orderId}`);
+            console.log('отправка заказа result:', result);
         })
 
         this.containerElement.append(form);

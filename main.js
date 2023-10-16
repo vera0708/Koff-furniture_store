@@ -198,11 +198,16 @@ const init = async () => {
                 done()
             }
         })
-        .on("/order", () => {
-            console.log('order');
-            new Order().mount(new Main().element);
+        .on("/order/:id", ({ data: { id } }) => {
+            console.log(`order: ${id}`);
+
+            api.getOrder(id).then(data => {
+                console.log('data from order: ', data)
+            })
+            // new Order().mount(new Main().element);
         }, {
             leave(done) {
+                // new Main().element.remove();
                 console.log('leave order')
                 done()
             },
@@ -221,14 +226,13 @@ const init = async () => {
             setTimeout(() => {
                 router.navigate('/');
             }, 5000);
-        }, {
-            leave(done) {
-                new Main().element.remove();
-                done()
-            },
         });
 
     router.resolve();
+
+    api.getCart().then(data => {
+        new Header().changeCount(data.totalCount);
+    });
 };
 
 init();
