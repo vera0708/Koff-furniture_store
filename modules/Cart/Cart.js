@@ -206,63 +206,127 @@ export class Cart {
         title.classList.add('cart__subtitle', 'cart__subtitle_form-order');
         title.textContent = 'Данные для доставки';
 
-        form.innerHTML = `
-        <fieldset class="form-order__fieldset form-order__fieldset_input">
-            <input class="form-order__input" type="text" name="name"
-               required placeholder="Фамилия Имя Отчество">
-            <input class="form-order__input" type="tel" name="phone"
-               required placeholder="Телефон">
-            <input class="form-order__input" type="email" name="email"
-               required placeholder="E-mail">
-            <input class="form-order__input" type="text" name="address"
-                placeholder="Адрес доставки">
-            <textarea class="form-order__textarea" name="comments"
-                placeholder="Комментарий к заказу"></textarea>
-        </fieldset>
-        <fieldset class="form-order__fieldset form-order__fieldset_radio">
-            <legend class="form-order__legend">Доставка</legend>
-            <label class="form-order__label radio">
-              <input class="radio__input" type="radio" name="deliveryType"
-                value="delivery">
-              Доставка
-            </label>
-            <label class="form-order__label radio">
-              <input class="radio__input" type="radio" name="deliveryType"
-                required value="pick-up">
-                Самовывоз
-            </label>
-        </fieldset>
-        <fieldset class="form-order__fieldset form-order__fieldset_radio">
-            <legend class="form-order__legend">Оплата</legend>
-            <label class="form-order__label radio">
-               <input class="radio__input" type="radio" name="paymentType" 
-                 required value="card">
-                 Картой при получении
-            </label>
-            <label class="form-order__label radio">
-                <input class="radio__input" type="radio" name="paymentType" 
-                  required value="cash">
-                  Наличными при получении
-            </label>
-        </fieldset>
-        `;
+        const inputFieldset = document.createElement('fieldset');
+        inputFieldset.classList.add('form-order__fieldset', 'form-order__fieldset_input');
+
+        const name = document.createElement('input');
+        name.classList.add('form-order__input');
+        name.type = "text";
+        name.name = "name";
+        name.required = true;
+        name.placeholder = "Фамилия Имя Отчество";
+
+        const phone = document.createElement('input');
+        phone.classList.add('form-order__input');
+        phone.type = "tel";
+        phone.name = "phone";
+        phone.required = true;
+        phone.placeholder = "Телефон";
+
+        const email = document.createElement('input');
+        email.classList.add('form-order__input');
+        email.type = "email";
+        email.name = "phone";
+        email.required = true;
+        email.placeholder = "E-mail";
+
+        const address = document.createElement('input');
+        address.classList.add('form-order__input');
+        address.type = "text";
+        address.name = "address";
+        address.placeholder = "Адрес доставки";
+
+        const textarea = document.createElement('textarea');
+        textarea.classList.add('form-order__textarea');
+        textarea.name = "comments";
+        textarea.placeholder = "Комментарий к заказу";
+
+        inputFieldset.append(name, phone, email, address, textarea);
+
+        const radioDeliveryFieldset = document.createElement('fieldset');
+        radioDeliveryFieldset.classList.add('form-order__fieldset', 'form-order__fieldset_radio');
+
+        const deliveryLegend = document.createElement('legend');
+        deliveryLegend.classList.add('form-order__legend');
+        deliveryLegend.textContent = 'Доставка';
+
+        const deliveryLabel = document.createElement('label');
+        deliveryLabel.classList.add('form-order__label', 'radio');
+        const deliveryLabelText = document.createTextNode("Доставка");
+
+        const deliveryInput = document.createElement('input');
+        deliveryInput.classList.add('radio__input');
+        deliveryInput.type = "radio";
+        deliveryInput.name = "deliveryType";
+        deliveryInput.required = true;
+        deliveryInput.value = "delivery";
+        deliveryInput.checked = true;
+        deliveryLabel.append(deliveryInput, deliveryLabelText);
+
+        const pickupLabel = document.createElement('label');
+        pickupLabel.classList.add('form-order__label', 'radio');
+        const pickupLabelText = document.createTextNode("Самовывоз");
+
+        const pickupInput = document.createElement('input');
+        pickupInput.classList.add('radio__input');
+        pickupInput.type = "radio";
+        pickupInput.name = "deliveryType";
+        pickupInput.required = true;
+        pickupInput.value = "pickup";
+        pickupLabel.append(pickupInput, pickupLabelText);
+
+        radioDeliveryFieldset.append(deliveryLegend, deliveryLabel, pickupLabel);
+
+        radioDeliveryFieldset.addEventListener('change', (e) => {
+            if (e.target === deliveryInput) {
+                address.disabled = false;
+            } else {
+                address.disabled = true;
+                address.value = '';
+            }
+        });
+
+        const radioPaymentFieldset = document.createElement('fieldset');
+        radioPaymentFieldset.classList.add('form-order__fieldset', 'form-order__fieldset_radio');
+
+        const paymentLegend = document.createElement('legend');
+        paymentLegend.classList.add('form-order__legend');
+        paymentLegend.textContent = 'Оплата';
+
+        const cardLabel = document.createElement('label');
+        cardLabel.classList.add('form-order__label', 'radio');
+        const cardLabelText = document.createTextNode("Картой при получении");
+
+        const cardInput = document.createElement('input');
+        cardInput.classList.add('radio__input');
+        cardInput.type = "radio";
+        cardInput.name = "paymentType";
+        cardInput.required = true;
+        cardInput.value = "card";
+        cardLabel.append(cardInput, cardLabelText);
+
+        const cashLabel = document.createElement('label');
+        cashLabel.classList.add('form-order__label', 'radio');
+        const cashLabelText = document.createTextNode("Наличными при получении");
+
+        const cashInput = document.createElement('input');
+        cashInput.classList.add('radio__input');
+        cashInput.type = "radio";
+        cashInput.name = "paymentType";
+        cashInput.required = true;
+        cashInput.value = "pickup";
+        cashLabel.append(cashInput, cashLabelText);
+
+        radioPaymentFieldset.append(paymentLegend, cardLabel, cashLabel);
+
+        form.append(title, inputFieldset, radioDeliveryFieldset, radioPaymentFieldset);
 
         form.addEventListener('submit', e => {
             e.preventDefault();
-            console.log('Происходит отправка заказа');
+            // new ApiService()
+            console.log('отправка заказа');
         })
 
         this.containerElement.append(form);
     };
 };
-/*products: [{id: 5,
-   article: "16954071925", 
-   name: "Стол компьютерный Ascetic", 
-   price: 1795,…}]
-       0: {id: 5, 
-           article: "16954071925", 
-           name: "Стол компьютерный Ascetic", 
-           price: 1795,…}
-totalCount: 1
-totalPrice: 1795
-*/
