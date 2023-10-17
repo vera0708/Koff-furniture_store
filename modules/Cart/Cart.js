@@ -260,7 +260,8 @@ export class Cart {
         deliveryInput.type = "radio";
         deliveryInput.name = "deliveryType";
         deliveryInput.required = true;
-        deliveryInput.value = "delivery";
+        // deliveryInput.value = "delivery";
+        deliveryInput.value = "Доставка";
         deliveryInput.checked = true;
         deliveryLabel.append(deliveryInput, deliveryLabelText);
 
@@ -273,7 +274,8 @@ export class Cart {
         pickupInput.type = "radio";
         pickupInput.name = "deliveryType";
         pickupInput.required = true;
-        pickupInput.value = "pickup";
+        // pickupInput.value = "pickup";
+        pickupInput.value = "Самовывоз";
         pickupLabel.append(pickupInput, pickupLabelText);
 
         radioDeliveryFieldset.append(deliveryLegend, deliveryLabel, pickupLabel);
@@ -303,7 +305,8 @@ export class Cart {
         cardInput.type = "radio";
         cardInput.name = "paymentType";
         cardInput.required = true;
-        cardInput.value = "card";
+        // cardInput.value = "card";
+        cardInput.value = "Картой при получении";
         cardLabel.append(cardInput, cardLabelText);
 
         const cashLabel = document.createElement('label');
@@ -315,7 +318,8 @@ export class Cart {
         cashInput.type = "radio";
         cashInput.name = "paymentType";
         cashInput.required = true;
-        cashInput.value = "pickup";
+        // cashInput.value = "pickup";
+        cashInput.value = "Наличными при получении";
         cashLabel.append(cashInput, cashLabelText);
 
         radioPaymentFieldset.append(paymentLegend, cardLabel, cashLabel);
@@ -330,7 +334,7 @@ export class Cart {
             const { orderId } = await new ApiService().postOrder(data);
 
             router.navigate(`/order/${orderId}`);
-            console.log('отправка заказа result:', result);
+            console.log('отправка заказа result:', orderId);
         })
 
         this.containerElement.append(form);

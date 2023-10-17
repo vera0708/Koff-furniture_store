@@ -4,71 +4,71 @@ import { LikeButton } from "../../features/LikeButton/LikeButton";
 import { addContainer } from "../addContainer";
 
 export class ProductCard {
-    static instance = null;
+  static instance = null;
 
-    constructor() {
-        if (!ProductCard.instance) {
-            ProductCard.instance = this;
-            this.element = document.createElement('section');
-            this.element.classList.add('product');
-            this.containerElement = addContainer(this.element, 'product__container');
-            this.isMounted = false;
-        }
-        return ProductCard.instance;
+  constructor() {
+    if (!ProductCard.instance) {
+      ProductCard.instance = this;
+      this.element = document.createElement('section');
+      this.element.classList.add('product');
+      this.containerElement = addContainer(this.element, 'product__container');
+      this.isMounted = false;
     }
+    return ProductCard.instance;
+  }
 
-    mount(parent, data) {
-        this.render(data);
-        if (this.isMounted) {
-            return;
-        };
-
-        parent.append(this.element);
-        this.isMounted = true;
-    }
-
-    unmount() {
-        this.element.remove();
-        this.isMounted = false;
+  mount(parent, data) {
+    this.render(data);
+    if (this.isMounted) {
+      return;
     };
 
-    render(data) {
-        this.containerElement.textContent = '';
+    parent.append(this.element);
+    this.isMounted = true;
+  }
 
-        const titleElem = document.createElement('h2');
-        titleElem.classList.add('product__title');
-        titleElem.textContent = data.name;
+  unmount() {
+    this.element.remove();
+    this.isMounted = false;
+  };
 
-        const productPicture = document.createElement('div');
-        productPicture.classList.add('product__picture');
+  render(data) {
+    this.containerElement.textContent = '';
 
-        const productSliderMain = document.createElement('div');
-        productSliderMain.classList.add('product__slider-main', 'swiper');
+    const titleElem = document.createElement('h2');
+    titleElem.classList.add('product__title');
+    titleElem.textContent = data.name;
 
-        const productMainList = document.createElement('div');
-        productMainList.classList.add('product__main-list', 'swiper-wrapper');
+    const productPicture = document.createElement('div');
+    productPicture.classList.add('product__picture');
 
-        const mainSliderItems = data.images.map(item => {
-            const productSlide = document.createElement('div');
-            productSlide.classList.add('product__slide', 'swiper-slide');
+    const productSliderMain = document.createElement('div');
+    productSliderMain.classList.add('product__slider-main', 'swiper');
 
-            const productImage = document.createElement('img');
-            productImage.classList.add('product__image');
-            productImage.src = `${API_URL}${item}`;
+    const productMainList = document.createElement('div');
+    productMainList.classList.add('product__main-list', 'swiper-wrapper');
 
-            productSlide.append(productImage);
-            return productSlide;
-        });
+    const mainSliderItems = data.images.map(item => {
+      const productSlide = document.createElement('div');
+      productSlide.classList.add('product__slide', 'swiper-slide');
 
-        productMainList.append(...mainSliderItems);
-        productSliderMain.append(productMainList);
+      const productImage = document.createElement('img');
+      productImage.classList.add('product__image');
+      productImage.src = `${API_URL}${item}`;
 
-        productPicture.append(productSliderMain);
+      productSlide.append(productImage);
+      return productSlide;
+    });
 
-        if (data.images.length > 1) {
-            const productArrowPrev = document.createElement('button');
-            productArrowPrev.classList.add('product__arrow_prev', 'product__arrow');
-            productArrowPrev.innerHTML = ` 
+    productMainList.append(...mainSliderItems);
+    productSliderMain.append(productMainList);
+
+    productPicture.append(productSliderMain);
+
+    if (data.images.length > 1) {
+      const productArrowPrev = document.createElement('button');
+      productArrowPrev.classList.add('product__arrow_prev', 'product__arrow');
+      productArrowPrev.innerHTML = ` 
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="32" height="32" rx="16" fill="white" fill-opacity="0.4" />
                 <path
@@ -76,9 +76,9 @@ export class ProductCard {
                   fill="currentColor" />
              </svg>
              `;
-            const productArrowNext = document.createElement('button');
-            productArrowNext.classList.add('product__arrow_next', 'product__arrow');
-            productArrowNext.innerHTML = `  
+      const productArrowNext = document.createElement('button');
+      productArrowNext.classList.add('product__arrow_next', 'product__arrow');
+      productArrowNext.innerHTML = `  
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="32" height="32" rx="16" transform="matrix(-1 0 0 1 32 0)" fill="white"
                   fill-opacity="0.4" />
@@ -87,111 +87,80 @@ export class ProductCard {
                   fill="currentColor" />
             </svg>
             `;
-            productSliderMain.append(productArrowPrev, productArrowNext);
+      productSliderMain.append(productArrowPrev, productArrowNext);
 
-            const productSliderThumbnails = document.createElement('div');
-            productSliderThumbnails.classList.add('swiper', 'product__slider-thumbnails');
+      const productSliderThumbnails = document.createElement('div');
+      productSliderThumbnails.classList.add('swiper', 'product__slider-thumbnails');
 
-            const productThumbnailsList = document.createElement('div');
-            productThumbnailsList.classList.add('swiper-wrapper', 'product__thumbnails-list');
+      const productThumbnailsList = document.createElement('div');
+      productThumbnailsList.classList.add('swiper-wrapper', 'product__thumbnails-list');
 
-            productSliderThumbnails.append(productThumbnailsList);
+      productSliderThumbnails.append(productThumbnailsList);
 
-            const thumbnailsSliderItems = data.images.map(item => {
-                const productSlide = document.createElement('div');
-                productSlide.classList.add('product__thumbnails-slide', 'swiper-slide');
+      const thumbnailsSliderItems = data.images.map(item => {
+        const productSlide = document.createElement('div');
+        productSlide.classList.add('product__thumbnails-slide', 'swiper-slide');
 
-                const productImage = document.createElement('img');
-                productImage.classList.add('product__thumbnails-img');
-                productImage.src = `${API_URL}${item}`;
-                productSlide.append(productImage);
-                return productSlide;
-            });
+        const productImage = document.createElement('img');
+        productImage.classList.add('product__thumbnails-img');
+        productImage.src = `${API_URL}${item}`;
+        productSlide.append(productImage);
+        return productSlide;
+      });
 
-            productThumbnailsList.append(...thumbnailsSliderItems);
+      productThumbnailsList.append(...thumbnailsSliderItems);
 
-            productPicture.append(productSliderThumbnails);
-        };
-        // можно всё предыдущее в одну функцию
-        const productInfo = document.createElement('div');
-        productInfo.classList.add('product__info');
-
-        const productPrice = document.createElement('p');
-        productPrice.classList.add('product__price');
-        productPrice.innerHTML = `${data.price.toLocaleString()}&nbsp;₽`;
-
-        const productArticle = document.createElement('p');
-        productArticle.classList.add('product__article');
-        productArticle.innerHTML = `арт.${data.article}`;
-
-        const productCharacteristics = document.createElement('div');
-        productCharacteristics.classList.add('product__characteristics');
-
-        const productCharacteristicsTitle = document.createElement('h3');
-        productCharacteristicsTitle.classList.add('product__characteristics-title');
-        productCharacteristicsTitle.textContent = 'Общие характеристики';
-
-        const tableCharacteristics = document.createElement('table');
-        tableCharacteristics.classList.add('product__characteristics-table', 'table');
-        const tableRows = data.characteristics.map(item => {
-            const tableRow = document.createElement('tr');
-            tableRow.classList.add('table__row');
-
-            const tableField = document.createElement('td');
-            tableField.classList.add('table__field');
-            tableField.textContent = item[0];
-
-            const tableValue = document.createElement('td');
-            tableValue.classList.add('table__value');
-            tableValue.textContent = item[1];
-
-            tableRow.append(tableField, tableValue);
-            return tableRow;
-        });
-
-        tableCharacteristics.append(...tableRows);
-        productCharacteristics.append(productCharacteristicsTitle, tableCharacteristics);
-
-        const productButtons = document.createElement('div');
-        productButtons.classList.add('product__btns');
-
-        const productBtn = new CartButton('product__btn', 'В корзину').create(data.id);
-        const productLike = new LikeButton('product__like').create(data.id);
-
-        productButtons.append(productBtn, productLike);
-
-        productInfo.append(productPrice, productArticle, productCharacteristics, productButtons);
-        this.containerElement.append(titleElem, productPicture, productInfo);
+      productPicture.append(productSliderThumbnails);
     };
+    // можно всё предыдущее в одну функцию
+    const productInfo = document.createElement('div');
+    productInfo.classList.add('product__info');
+
+    const productPrice = document.createElement('p');
+    productPrice.classList.add('product__price');
+    productPrice.innerHTML = `${data.price.toLocaleString()}&nbsp;₽`;
+
+    const productArticle = document.createElement('p');
+    productArticle.classList.add('product__article');
+    productArticle.innerHTML = `арт.${data.article}`;
+
+    const productCharacteristics = document.createElement('div');
+    productCharacteristics.classList.add('product__characteristics');
+
+    const productCharacteristicsTitle = document.createElement('h3');
+    productCharacteristicsTitle.classList.add('product__characteristics-title');
+    productCharacteristicsTitle.textContent = 'Общие характеристики';
+
+    const tableCharacteristics = document.createElement('table');
+    tableCharacteristics.classList.add('product__characteristics-table', 'table');
+    const tableRows = data.characteristics.map(item => {
+      const tableRow = document.createElement('tr');
+      tableRow.classList.add('table__row');
+
+      const tableField = document.createElement('td');
+      tableField.classList.add('table__field');
+      tableField.textContent = item[0];
+
+      const tableValue = document.createElement('td');
+      tableValue.classList.add('table__value');
+      tableValue.textContent = item[1];
+
+      tableRow.append(tableField, tableValue);
+      return tableRow;
+    });
+
+    tableCharacteristics.append(...tableRows);
+    productCharacteristics.append(productCharacteristicsTitle, tableCharacteristics);
+
+    const productButtons = document.createElement('div');
+    productButtons.classList.add('product__btns');
+
+    const productBtn = new CartButton('product__btn', 'В корзину').create(data.id);
+    const productLike = new LikeButton('product__like').create(data.id);
+
+    productButtons.append(productBtn, productLike);
+
+    productInfo.append(productPrice, productArticle, productCharacteristics, productButtons);
+    this.containerElement.append(titleElem, productPicture, productInfo);
+  };
 };
-/*      <div class="swiper product__slider-thumbnails">
-            <div class="swiper-wrapper product__thumbnails-list">
-              <div class="swiper-slide product__thumbnails-slide">
-                <img class="product__thumbnails-img" src="/img/chair_product.jpg">
-              </div>
-              <div class="swiper-slide product__thumbnails-slide">
-                <img class="product__thumbnails-img" src="https://swiperjs.com/demos/images/nature-2.jpg">
-              </div>
-            </div>
-          </div>
-        </div>
-
-<div class="product__info">
-          <div class="product__characteristics">
-
-            <div class="product__btns">
-              <button class="product__btn" type="button">В корзину</button>
-              <button class="product__like" type="button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                  <path
-                    d="M8.4135 13.8733C8.18683 13.9533 7.8135 13.9533 7.58683 13.8733C5.6535 13.2133 1.3335 10.46 1.3335 5.79332C1.3335 3.73332 2.9935 2.06665 5.04016 2.06665C6.2535 2.06665 7.32683 2.65332 8.00016 3.55998C8.6735 2.65332 9.7535 2.06665 10.9602 2.06665C13.0068 2.06665 14.6668 3.73332 14.6668 5.79332C14.6668 10.46 10.3468 13.2133 8.4135 13.8733Z"
-                    fill="white" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-*/

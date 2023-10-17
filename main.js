@@ -165,7 +165,6 @@ const init = async () => {
         .on("/product/:id", async (obj) => {
             new Catalog().mount(new Main().element);
             const data = await api.getProductById(obj.data.id);
-            console.log('data: ', data);
             new BreadCrumbs().mount(new Main().element, [
                 {
                     text: data.category,
@@ -200,11 +199,12 @@ const init = async () => {
         })
         .on("/order/:id", ({ data: { id } }) => {
             api.getOrder(id).then(data => {
-            })
-            // new Order().mount(new Main().element);
+                new Order().mount(new Main().element,
+                    data[0]);
+            });
         }, {
             leave(done) {
-                // new Order().unmount();
+                new Order().unmount();
                 console.log('leave order')
                 done()
             },
